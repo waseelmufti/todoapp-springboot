@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html th:fragment="layout (title, content)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Todo List Application</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bulma.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/custom.css}">
+</head>
+<body>
+    <nav th:replace="layouts/partials/navbar :: navbar"></nav>
+    <div class="container p-2">
+        <div th:replace="${content}"></div>
+    </div>
+    <footer th:replace="layouts/partials/footer :: footer"></footer>
+</body>
+</html>
