@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Todo</title>
+</head>
+<body>
+    <div id="content" class="p-2">
+        <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="title">Create New Todo</h1>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <a th:href="@{/todo}" class="button is-primary">Back</a>
+              </div>
+            </div>
+        </div>
+        <hr class="bd-hr">
+        <div class="container">
+            <div class="card mb-2">
+                <header class="card-header">
+                    <p class="card-header-title">Card header</p>
+                </header>
+                <div class="card-content">
+                  <div class="content">
+                    <form action="#" th:action="@{/todo/create}" th:object="${todo}" method="post">
+                      <div class="field">
+                          <label class="label">Title</label>
+                          <div class="control">
+                            <input class="input" type="text" placeholder="Enter title" th:field="*{title}">
+                          </div>
+                        </div>
+      
+                        <div class="field">
+                          <label class="label">Description</label>
+                          <div class="control">
+                            <textarea class="textarea" placeholder="Enter description" th:field="*{description}"></textarea>
+                          </div>
+                        </div>                  
+                        
+                        <div class="field">
+                          <label class="label">Is public?</label>
+                          <div class="control">
+                            <label class="radio">
+                              <input type="radio" value="yes" th:field="*{public}">
+                              Yes
+                            </label>
+                            <label class="radio">
+                              <input type="radio" value="no" th:field="*{public}">
+                              No
+                            </label>
+                          </div>
+                        </div>
+                        
+                        <div class="field is-grouped">
+                          <div class="control">
+                            <button class="button is-link">Submit</button>
+                          </div>
+                          <div class="control">
+                            <button class="button is-link is-light">Cancel</button>
+                          </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</body>
+</html>

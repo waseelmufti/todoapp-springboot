@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+</head>
+<body>
+    <div id="content" class="p-2">
+        <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="title">My Todo List</h1>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <a th:href="@{/todo/create}" class="button is-primary">Add New Todo</a>
+              </div>
+            </div>
+        </div>
+        <hr class="bd-hr">
+        <div class="container">
+            <div class="card mb-2">
+                <header class="card-header">
+                    <p class="card-header-title">Card header</p>
+                </header>
+                <div class="card-content">
+                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                  <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
+                    iaculis mauris.
+                    <br />
+                  </div>
+                </div>
+                <footer class="card-footer">
+                    <a href="#" class="card-footer-item">Save</a>
+                    <a href="#" class="card-footer-item">Edit</a>
+                    <a href="#" class="card-footer-item">Delete</a>
+                </footer>
+              </div>
+        </div>
+    </div>
+</body>
+</html>
