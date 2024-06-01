@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-    <div th:fragment="notification" th:if="${alertMesage}">
-        <div class="notification" th:classappend="'is-' + ${alertMesage.getType()}" >
+    <div th:fragment="notification" th:if="${alertMessage}">
+        <div class="notification" th:classappend="'is-' + ${alertMessage.getType()}" >
             <button class="delete"></button>
-            <p th:text="${alertMesage.getMessage()}"></p>
+            <p th:text="${alertMessage.getMessage()}"></p>
         </div>
     </div>
 </body>

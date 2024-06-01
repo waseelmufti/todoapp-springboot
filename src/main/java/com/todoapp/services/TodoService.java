@@ -1,3 +1,13 @@
 package com.todoapp.services;
 
-public interface TodoService {}
+import java.util.List;
+
+import com.todoapp.payloads.TodoListDTO;
+
+public interface TodoService {
+    public TodoListDTO getTodo(Integer id) throws Exception;
+    public List<TodoListDTO> getAllTodos();
+    public TodoListDTO addTodo(TodoListDTO todoDTo);
+    public TodoListDTO updateTodo(TodoListDTO todoDTo, Integer todoId) throws Exception;
+    public void deleteTodo(Integer todoId) throws Exception;
+}

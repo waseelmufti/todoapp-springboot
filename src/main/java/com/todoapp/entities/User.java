@@ -31,10 +31,10 @@ public class User {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "active", columnDefinition = "boolean default true")
-    private Boolean active;
-    @Column(name = "role", nullable = false, columnDefinition = "varchar(20) default 'ROLE_USER'")
-    private String role;
+    @Column(name = "active", columnDefinition = "TINYINT(1)")
+    private Boolean active = true;
+    @Column(name = "role", nullable = false, length = 20)
+    private String role = "ROLE_USER";
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TodoList> todoLists;
 

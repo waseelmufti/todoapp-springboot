@@ -3,6 +3,9 @@ package com.todoapp.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,12 +16,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "todo_lists")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class TodoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +36,20 @@ public class TodoList {
     private String slug;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @Column(name = "sharable_link", length = 255)
-    private String sharableLink;
+    @Column(name = "view_pass_code", length = 255)
+    private String viewPasscode;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @OneToMany(mappedBy = "todoList")
     private List<TodoItem> todoItems;
-    @Column(name = "is_public", columnDefinition = "TINYINT(1) DEFAULT 0")
-    private boolean isPublic;
+    @Column(name = "is_public", columnDefinition = "BOOLEAN")
+    private boolean isPublic = false;
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
     private LocalDateTime createdAt;
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
 }

@@ -27,11 +27,12 @@
                 </header>
                 <div class="card-content">
                   <div class="content">
-                    <form action="#" th:action="@{/todo/create}" th:object="${todo}" method="post">
+                    <form action="#" th:action="${action} == 'edit' ? @{/todo/{id}/update(id=${todo.id})} : @{/todo/create}" th:object="${todo}" method="post">
                       <div class="field">
                           <label class="label">Title</label>
                           <div class="control">
                             <input class="input" type="text" placeholder="Enter title" th:field="*{title}">
+                            <p class="has-text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">error</p>
                           </div>
                         </div>
       
@@ -46,14 +47,15 @@
                           <label class="label">Is public?</label>
                           <div class="control">
                             <label class="radio">
-                              <input type="radio" value="yes" th:field="*{public}">
+                              <input type="radio" value="yes" th:field="*{isPublic}">
                               Yes
                             </label>
                             <label class="radio">
-                              <input type="radio" value="no" th:field="*{public}">
+                              <input type="radio" value="no" th:field="*{isPublic}">
                               No
                             </label>
                           </div>
+                          <p class="has-text-danger" th:if="${#fields.hasErrors('isPublic')}" th:errors="*{isPublic}">error</p>
                         </div>
                         
                         <div class="field is-grouped">

@@ -29,8 +29,8 @@ public class TodoItem {
     private String title;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @Column(name = "is_completed", columnDefinition = "TINYINT(1) DEFAULT 0")
-    private boolean isCompleted;
+    @Column(name = "is_completed", columnDefinition = "BOOLEAN")
+    private boolean isCompleted = false;
     @ManyToOne
     @JoinColumn(name = "list_id")
     private TodoList todoList;
