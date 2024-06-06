@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.todoapp.payloads.AlertMessage;
 import com.todoapp.payloads.TodoListDTO;
+import com.todoapp.services.TodoItemService;
 import com.todoapp.services.TodoService;
 
 import jakarta.validation.Valid;
@@ -23,6 +24,9 @@ import jakarta.validation.Valid;
 public class TodoController {
     @Autowired
     private TodoService todoService;
+    @Autowired
+    private TodoItemService todoItemService;
+
 
 
     @RequestMapping("")
@@ -96,7 +100,14 @@ public class TodoController {
     
     
     @RequestMapping("/{id}")
-    public String show(@PathVariable("id") Integer id, Model model) {
+    public String show(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            model.addAttribute("todo", this.todoService.getTodo(id));
+            model.addAttribute("todoItems", this.todoItemService.getAllTodoItem(id));
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", e.getMessage()));
+            return "redirect:/todo";
+        }
         return "todo/show";
     }
 

@@ -13,25 +13,48 @@
       <div class="level">
         <div class="level-left">
           <div class="level-item">
-            <h1 class="title">My Todo List</h1>
+            <h1 class="title" th:text="${todo.title}">Title</h1>
+          </div>
+          <div class="level-item">
+            <span class="tag is-primary is-normal is-rounded" th:text="${todo.isPublic ? 'Public' : 'Private'}">Primary</span>
           </div>
         </div>
         <div class="level-right">
           <div class="level-item">
-            <a th:href="@{/todo/create}" class="button is-primary"
-              >Add New Todo</a
-            >
+            <a th:href="@{/todo/{todoId}/items/create(todoId=${todo.id})}" class="button is-primary">Add New Item</a>
           </div>
         </div>
       </div>
+      <h6 class="subtitle is-5" th:text="${#temporals.format(todo.createdAt, 'MMM dd, yyyy')}">Subtitle</h6>
       <hr class="bd-hr" />
       <div class="container">
+        <p class="mb-5" th:text="${todo.description}"></p>
+
+        <nav class="panel">
+            <p class="panel-heading"></p>
+            <div class="panel-block">
+              <p class="control has-icons-left">
+                <input class="input" type="text" placeholder="Search" />
+                <span class="icon is-left">
+                  <i class="fas fa-search" aria-hidden="true"></i>
+                </span>
+              </p>
+            </div>
+            <p class="panel-tabs">
+              <a class="is-active">All</a>
+              <a>Completed</a>
+            </p>
+            <label class="panel-block" th:each="todoItem : ${todoItems}"
+              th:id="${'item-' + ${todoItem.id}}"
+              th:text="${todoItem.title}"
+              >
+              <input type="checkbox" />
+              remember me
+            </label>
+          </nav>
         <div class="card mb-2" th:each="todo : ${todos}">
           <header class="card-header">
-            <p class="card-header-title">
-              <span th:text="${todo.title}">title</span>&nbsp;
-              <span class="tag is-primary is-normal is-rounded" th:text="${todo.isPublic ? 'Public' : 'Private'}">Primary</span>
-            </p>
+            <p class="card-header-title" th:text="${todo.title}">title</p>
           </header>
           <div class="card-content">
             <time
