@@ -13,6 +13,8 @@ import com.todoapp.repositories.TodoItemRepo;
 import com.todoapp.repositories.TodoListRepo;
 import com.todoapp.services.TodoItemService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class TodoItemServiceImpl implements TodoItemService{
     @Autowired
@@ -42,11 +44,35 @@ public class TodoItemServiceImpl implements TodoItemService{
     public List<TodoItemDTO> getAllTodoItem(Integer todoId) throws Exception{
         TodoList todoList = this.todoRepo.findById(todoId).orElseThrow(() -> new Exception("Todo not found"));
 
-        List<TodoItem> todoItems = this.todoItemRepo.findByTodoId(todoList.getId());
+        List<TodoItem> todoItems = this.todoItemRepo.findByTodoList_Id(todoList.getId());
         List<TodoItemDTO> todoItemDTOs = todoItems.stream().map((item) -> {
             return new TodoItemDTO(item.getId(), item.getTitle(), item.getDescription(), item.isCompleted() ? "yes" : "no", item.getCreatedAt(), item.getUpdatedAt());
         }).collect(Collectors.toList());
         return todoItemDTOs;
     }
+        
+        
+    @Override
+    public List<TodoItemDTO> getAllCompletedTodoItem(Integer todoId) throws Exception {
+        TodoList todoList = this.todoRepo.findById(todoId).orElseThrow(() -> new Exception("Todo not found"));
+
+        List<TodoItem> todoItems = this.todoItemRepo.findByTodoList_IdAndIsCompletedTrue(todoList.getId());
+        List<TodoItemDTO> todoItemDTOs = todoItems.stream().map((item) -> {
+            return new TodoItemDTO(item.getId(), item.getTitle(), item.getDescription(), item.isCompleted() ? "yes" : "no", item.getCreatedAt(), item.getUpdatedAt());
+        }).collect(Collectors.toList());
+        return todoItemDTOs;
+    }
+
+    @Transactional
+    @Override
+    public Integer changeStatus(Integer todoId, Integer todoItemId, Boolean status) throws Exception {
+        try {
+            return this.todoItemRepo.updateStatusById(todoId, todoItemId, status);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    
 
 }

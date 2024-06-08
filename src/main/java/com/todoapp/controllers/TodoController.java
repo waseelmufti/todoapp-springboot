@@ -1,5 +1,8 @@
 package com.todoapp.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,10 +11,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.todoapp.payloads.AlertMessage;
+import com.todoapp.payloads.TodoItemDTO;
 import com.todoapp.payloads.TodoListDTO;
 import com.todoapp.services.TodoItemService;
 import com.todoapp.services.TodoService;
@@ -100,10 +105,19 @@ public class TodoController {
     
     
     @RequestMapping("/{id}")
-    public String show(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+    public String show(@PathVariable("id") Integer id, Model model, 
+        RedirectAttributes redirectAttributes, @RequestParam(value = "status", required = false) String status) {
         try {
             model.addAttribute("todo", this.todoService.getTodo(id));
-            model.addAttribute("todoItems", this.todoItemService.getAllTodoItem(id));
+            List<TodoItemDTO> todoItemsDTO = null;
+            if(status != null && status.equals("completed")){
+                todoItemsDTO = this.todoItemService.getAllCompletedTodoItem(id);
+            }else{
+                status = "all";
+                todoItemsDTO = this.todoItemService.getAllTodoItem(id);
+            }
+            model.addAttribute("todoItems", todoItemsDTO);
+            model.addAttribute("status", status);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", e.getMessage()));
             return "redirect:/todo";

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html
-  th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{})}"
+  th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{::#scripts})}"
   xmlns:th="http://www.thymeleaf.org"
 >
   <head>
@@ -31,6 +31,7 @@
         <p class="mb-5" th:text="${todo.description}"></p>
 
         <nav class="panel">
+          <div id="notificationWrap"></div>
             <p class="panel-heading"></p>
             <div class="panel-block">
               <p class="control has-icons-left">
@@ -41,51 +42,48 @@
               </p>
             </div>
             <p class="panel-tabs">
-              <a class="is-active">All</a>
-              <a>Completed</a>
+              <a th:class="${status.equals('all') ? 'is-active' : ''}" th:href="@{/todo/{todoId}(todoId=${todo.id})}">All</a>
+              <a th:class="${status.equals('completed') ? 'is-active' : ''}" th:href="@{/todo/{todoId}?status=completed(todoId=${todo.id})}">Completed</a>
             </p>
-            <label class="panel-block" th:each="todoItem : ${todoItems}"
-              th:id="${'item-' + ${todoItem.id}}"
-              th:text="${todoItem.title}"
-              >
-              <input type="checkbox" />
-              remember me
+            <label class="panel-block list_item" th:each="todoItem : ${todoItems}"
+              th:id="'item-' + ${todoItem.id}">
+              <input type="checkbox" th:data-itemId="${todoItem.id}" th:checked="${todoItem.isCompleted}" />
+              <span th:text="${todoItem.title}">Task name</span>
             </label>
           </nav>
-        <div class="card mb-2" th:each="todo : ${todos}">
-          <header class="card-header">
-            <p class="card-header-title" th:text="${todo.title}">title</p>
-          </header>
-          <div class="card-content">
-            <time
-              datetime="2016-1-1"
-              th:text="${#temporals.format(todo.createdAt, 'MMM dd, yyyy')}"
-              >Date time</time
-            >
-            <div class="content" th:text="${todo.description}">description</div>
-          </div>
-          <footer class="card-footer">
-            <a th:href="@{/todo/{id}(id=${todo.id})}" class="card-footer-item"
-              >View</a
-            >
-            <a
-              th:href="@{/todo/{id}/edit(id=${todo.id})}"
-              class="card-footer-item"
-              >Edit</a
-            >
-            <div class="card-footer-item">
-              <form
-                th:action="@{/todo/{id}/delete(id=${todo.id})}"
-                th:method="delete"
-                th:object="${todo}"
-              >
-                <!-- <input type="hidden" th:name="_csrf" th:value="${_csrf.token}"/> -->
-                <button type="submit" class="button is-ghost">Delete</button>
-              </form>
-            </div>
-          </footer>
-        </div>
       </div>
+    </div>
+    <div id="scripts">
+      <script th:inline="javascript">
+        var notificationHtml = '<div class="notification mb-2 {class}"><button class="delete"></button>{content}</div>';
+        $(document).ready(function(){
+          $(".list_item input[type='checkbox']").on("change",function(){
+            var itemId = $(this).data("itemid");
+            var url = /*[[@{/todo/{todoId}/items/{itemId}/change-status(todoId=${todo.id})}]]*/ "";
+            url =  url.replace("{itemId}", itemId);
+            var isChecked = $(this).is(":checked");
+            $.ajax({
+              // contentType: "application/json",
+              type: "POST",
+              url: url,
+              data: {"isChecked": isChecked ? "yes" : "no"},
+              beforeSend: function(xhr) {
+                $("#notificationWrap").html("");
+              },
+              success: function(response) {
+                if(response.status == "success"){
+                  var successNotification = notificationHtml.replace("{class}", "is-success").replace("{content}", "Item status changed successfully");
+                  $("#notificationWrap").html(successNotification);
+                }
+              },
+              error: function(error) {
+                var errorNotification = notificationHtml.replace("{class}", "is-danger").replace("{content}", response.errors.join("<br/>"));
+                $("#notificationWrap").html(errorNotification);
+              }
+            });
+          });
+        });
+      </script>
     </div>
   </body>
 </html>
