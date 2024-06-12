@@ -1,9 +1,9 @@
 package com.todoapp.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +21,7 @@ import com.todoapp.payloads.TodoListDTO;
 import com.todoapp.services.TodoItemService;
 import com.todoapp.services.TodoService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 
@@ -32,7 +33,8 @@ public class TodoController {
     @Autowired
     private TodoItemService todoItemService;
 
-
+    @Value("${app.url}")
+    private String APP_URL;
 
     @RequestMapping("")
     public String index(Model model) {
@@ -106,7 +108,8 @@ public class TodoController {
     
     @RequestMapping("/{id}")
     public String show(@PathVariable("id") Integer id, Model model, 
-        RedirectAttributes redirectAttributes, @RequestParam(value = "status", required = false) String status) {
+        RedirectAttributes redirectAttributes, HttpServletRequest request,
+        @RequestParam(value = "status", required = false) String status) {
         try {
             model.addAttribute("todo", this.todoService.getTodo(id));
             List<TodoItemDTO> todoItemsDTO = null;
@@ -116,6 +119,7 @@ public class TodoController {
                 status = "all";
                 todoItemsDTO = this.todoItemService.getAllTodoItem(id);
             }
+            model.addAttribute("APP_URL", APP_URL);
             model.addAttribute("todoItems", todoItemsDTO);
             model.addAttribute("status", status);
         } catch (Exception e) {
