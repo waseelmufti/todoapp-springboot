@@ -32,6 +32,16 @@ public class TodoServiceImpl implements TodoService{
 
 
     @Override
+    public TodoListDTO getTodoByIdAndPasscode(Integer id, String passcode) throws Exception {
+        TodoList todo = this.todoListRepo.findByIdAndViewPasscodeAndIsPublicTrue(id, passcode).orElseThrow(() -> new Exception("Todo not found Or you don't have permission"));
+
+        return new TodoListDTO(todo.getId(), todo.getTitle(), todo.getSlug(), todo.getDescription(), 
+            todo.getViewPasscode(), todo.isPublic() ? "yes" : "no", todo.getCreatedAt(), todo.getUpdatedAt());
+    }
+
+
+
+    @Override
     public TodoListDTO getTodo(Integer id) throws Exception{
         TodoList todo = this.todoListRepo.findById(id).orElseThrow(() -> new Exception("Todo not found"));
 
