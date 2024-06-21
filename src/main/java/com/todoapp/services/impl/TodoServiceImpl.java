@@ -21,11 +21,19 @@ public class TodoServiceImpl implements TodoService{
     @Override
     public List<TodoListDTO> getAllTodos() {
         List<TodoList> todos = this.todoListRepo.findAll();
-        List<TodoListDTO> todoListDTO = todos.stream().map((todo) -> new TodoListDTO(todo.getId(), todo.getTitle(), todo.getSlug(), 
-                todo.getDescription(), todo.getViewPasscode(), todo.isPublic() ? "yes" : "no", 
-                todo.getCreatedAt(), todo.getUpdatedAt())
-            )
-            .collect(Collectors.toList());
+        List<TodoListDTO> todoListDTO = todos.stream().map((todo) -> {
+            TodoListDTO todoDTo = new TodoListDTO();
+            todoDTo.setId(todo.getId());
+            todoDTo.setTitle(todo.getTitle());
+            todoDTo.setSlug(todo.getSlug());
+            todoDTo.setDescription(todo.getDescription());
+            todoDTo.setViewPasscode(todo.getViewPasscode());
+            todoDTo.setIsPublic(todo.isPublic() ? "yes" : "no");
+            todoDTo.setCreatedAt(todo.getCreatedAt());
+            todoDTo.setUpdatedAt(todo.getUpdatedAt());
+            return todoDTo;
+        })
+        .collect(Collectors.toList());
         return todoListDTO;
     }
 
@@ -35,8 +43,16 @@ public class TodoServiceImpl implements TodoService{
     public TodoListDTO getTodoByIdAndPasscode(Integer id, String passcode) throws Exception {
         TodoList todo = this.todoListRepo.findByIdAndViewPasscodeAndIsPublicTrue(id, passcode).orElseThrow(() -> new Exception("Todo not found Or you don't have permission"));
 
-        return new TodoListDTO(todo.getId(), todo.getTitle(), todo.getSlug(), todo.getDescription(), 
-            todo.getViewPasscode(), todo.isPublic() ? "yes" : "no", todo.getCreatedAt(), todo.getUpdatedAt());
+        TodoListDTO todoDTo = new TodoListDTO();
+        todoDTo.setId(todo.getId());
+        todoDTo.setTitle(todo.getTitle());
+        todoDTo.setSlug(todo.getSlug());
+        todoDTo.setDescription(todo.getDescription());
+        todoDTo.setViewPasscode(todo.getViewPasscode());
+        todoDTo.setIsPublic(todo.isPublic() ? "yes" : "no");
+        todoDTo.setCreatedAt(todo.getCreatedAt());
+        todoDTo.setUpdatedAt(todo.getUpdatedAt());
+        return todoDTo;
     }
 
 
@@ -45,8 +61,16 @@ public class TodoServiceImpl implements TodoService{
     public TodoListDTO getTodo(Integer id) throws Exception{
         TodoList todo = this.todoListRepo.findById(id).orElseThrow(() -> new Exception("Todo not found"));
 
-        return new TodoListDTO(todo.getId(), todo.getTitle(), todo.getSlug(),  todo.getDescription(), todo.getViewPasscode(),
-                    todo.isPublic() ? "yes" : "no", todo.getCreatedAt(), todo.getUpdatedAt());
+        TodoListDTO todoDTo = new TodoListDTO();
+        todoDTo.setId(todo.getId());
+        todoDTo.setTitle(todo.getTitle());
+        todoDTo.setSlug(todo.getSlug());
+        todoDTo.setDescription(todo.getDescription());
+        todoDTo.setViewPasscode(todo.getViewPasscode());
+        todoDTo.setIsPublic(todo.isPublic() ? "yes" : "no");
+        todoDTo.setCreatedAt(todo.getCreatedAt());
+        todoDTo.setUpdatedAt(todo.getUpdatedAt());
+        return todoDTo;
     }
 
 
@@ -64,6 +88,7 @@ public class TodoServiceImpl implements TodoService{
         todo.setSlug(todoDTo.getSlug());
         todo.setPublic(todoDTo.getIsPublic().equals("yes") ? true : false);
         todo.setViewPasscode(todoDTo.getViewPasscode());
+        todo.setUser(Utils.getAuthUser());
 
         this.todoListRepo.save(todo);
         return todoDTo;
@@ -89,9 +114,17 @@ public class TodoServiceImpl implements TodoService{
         todoList.setViewPasscode(todoDTo.getViewPasscode());
 
         TodoList updateTodoList = this.todoListRepo.save(todoList);
-        return new TodoListDTO(todoId, updateTodoList.getTitle(), updateTodoList.getSlug(), updateTodoList.getDescription(),
-                 updateTodoList.getViewPasscode(), updateTodoList.isPublic() ? "yes" : "no", 
-                 updateTodoList.getCreatedAt(), updateTodoList.getUpdatedAt());
+        
+        todoDTo = new TodoListDTO();
+        todoDTo.setId(updateTodoList.getId());
+        todoDTo.setTitle(updateTodoList.getTitle());
+        todoDTo.setSlug(updateTodoList.getSlug());
+        todoDTo.setDescription(updateTodoList.getDescription());
+        todoDTo.setViewPasscode(updateTodoList.getViewPasscode());
+        todoDTo.setIsPublic(updateTodoList.isPublic() ? "yes" : "no");
+        todoDTo.setCreatedAt(updateTodoList.getCreatedAt());
+        todoDTo.setUpdatedAt(updateTodoList.getUpdatedAt());
+        return todoDTo;
     }
 
 

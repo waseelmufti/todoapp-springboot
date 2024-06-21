@@ -23,6 +23,7 @@ import com.todoapp.services.TodoService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.security.Principal;
 
 
 @Controller
@@ -51,7 +52,8 @@ public class TodoController {
         return "todo/create";
     }
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView save(@Valid @ModelAttribute("todo") TodoListDTO todo, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public ModelAndView save(@Valid @ModelAttribute("todo") TodoListDTO todo, BindingResult bindingResult, 
+        RedirectAttributes redirectAttributes, Principal principal) {
         /*
         * check validation errors
         * set error bindings to show errors

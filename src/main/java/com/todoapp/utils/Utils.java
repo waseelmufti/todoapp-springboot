@@ -5,6 +5,11 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.todoapp.entities.User;
+
 public class Utils {
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
@@ -27,5 +32,15 @@ public class Utils {
             randomString.append(characters.charAt(index));
         }
         return randomString.toString();
+    }
+
+    public static User getAuthUser(){
+        // Get the authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (User) authentication.getPrincipal();
+    }
+
+    public static String getAuthUserName(){
+        return getAuthUser().getUsername()
     }
 }

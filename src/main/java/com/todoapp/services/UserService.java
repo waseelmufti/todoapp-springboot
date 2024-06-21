@@ -1,3 +1,7 @@
 package com.todoapp.services;
 
-public interface UserService {}
+import com.todoapp.payloads.UserDTO;
+
+public interface UserService {
+    public UserDTO saveUser(UserDTO userDTO);
+}
