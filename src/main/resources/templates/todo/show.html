@@ -105,7 +105,7 @@
                 }
               },
               error: function(error) {
-                var errorNotification = notificationHtml.replace("{class}", "is-danger").replace("{content}", response.errors.join("<br/>"));
+                var errorNotification = notificationHtml.replace("{class}", "is-danger").replace("{content}", error.errors.join("<br/>"));
                 $("#notificationWrap").html(errorNotification);
               }
             });

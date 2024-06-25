@@ -49,6 +49,7 @@ public class TodoController {
             // Add the named model attribute here
             model.addAttribute("todo", new TodoListDTO());
         }
+        model.addAttribute("action", "create");
         return "todo/create";
     }
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -76,9 +77,8 @@ public class TodoController {
         try {
             if(!model.containsAttribute("todo")){
                 model.addAttribute("todo", this.todoService.getTodo(id));
-                model.addAttribute("action", "edit");
             }
-            
+            model.addAttribute("action", "edit");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", e.getMessage()));
             return "redirect:/todo";
@@ -159,7 +159,7 @@ public class TodoController {
             this.todoService.deleteTodo(id);
             redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", "Todo delete successfully"));
         }catch(Exception e){
-            redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", "Something went wrong"));
+            redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", e.getMessage()));
         }
         return "redirect:/todo";
     }

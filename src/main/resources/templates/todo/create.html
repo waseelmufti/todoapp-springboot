@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Todo</title>
+    <title th:text="${action.equals('edit') ? 'Edit Todo' : 'Create New Todo'}">Create New Todo</title>
 </head>
 <body>
     <div id="content" class="p-2">
         <div class="level">
             <div class="level-left">
               <div class="level-item">
-                <h1 class="title">Create New Todo</h1>
+                <h1 class="title" th:text="${action.equals('edit') ? 'Edit Todo' : 'Create New Todo'}"></h1>
               </div>
             </div>
             <div class="level-right">
@@ -23,7 +23,7 @@
         <div class="container">
             <div class="card mb-2">
                 <header class="card-header">
-                    <p class="card-header-title">Card header</p>
+                    <p class="card-header-title"></p>
                 </header>
                 <div class="card-content">
                   <div class="content">
@@ -63,7 +63,7 @@
                             <button class="button is-link">Submit</button>
                           </div>
                           <div class="control">
-                            <button class="button is-link is-light">Cancel</button>
+                            <a th:href="@{/todo}" class="button is-link is-light">Cancel</a>
                           </div>
                         </div>
                     </form>

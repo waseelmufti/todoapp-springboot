@@ -41,6 +41,6 @@ public class Utils {
     }
 
     public static String getAuthUserName(){
-        return getAuthUser().getUsername()
+        return getAuthUser().getUsername();
     }
 }

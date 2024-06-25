@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.todoapp.entities.TodoList;
+import com.todoapp.entities.User;
 import com.todoapp.payloads.TodoListDTO;
 import com.todoapp.repositories.TodoListRepo;
 import com.todoapp.services.TodoService;
@@ -20,7 +21,8 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     public List<TodoListDTO> getAllTodos() {
-        List<TodoList> todos = this.todoListRepo.findAll();
+        User authUser = Utils.getAuthUser();
+        List<TodoList> todos = this.todoListRepo.findByUserIdOrderByIdDesc(authUser.getId());
         List<TodoListDTO> todoListDTO = todos.stream().map((todo) -> {
             TodoListDTO todoDTo = new TodoListDTO();
             todoDTo.setId(todo.getId());
@@ -59,7 +61,8 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     public TodoListDTO getTodo(Integer id) throws Exception{
-        TodoList todo = this.todoListRepo.findById(id).orElseThrow(() -> new Exception("Todo not found"));
+        User authUser = Utils.getAuthUser();
+        TodoList todo = this.todoListRepo.findByIdAndUserId(id, authUser.getId()).orElseThrow(() -> new Exception("Todo not found"));
 
         TodoListDTO todoDTo = new TodoListDTO();
         todoDTo.setId(todo.getId());
@@ -98,7 +101,8 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     public TodoListDTO updateTodo(TodoListDTO todoDTo, Integer todoId) throws Exception {
-        TodoList todoList = this.todoListRepo.findById(todoId).orElseThrow(() -> new Exception("Todo Not Found"));
+        User authUser = Utils.getAuthUser();
+        TodoList todoList = this.todoListRepo.findByIdAndUserId(todoId, authUser.getId()).orElseThrow(() -> new Exception("Todo Not Found"));
 
         todoDTo.setSlug(Utils.toSlug(todoDTo.getTitle()));
         if(todoDTo.getIsPublic().equals("yes")){
@@ -131,7 +135,8 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     public void deleteTodo(Integer todoId) throws Exception{
-        TodoList todoList =  this.todoListRepo.findById(todoId).orElseThrow(() -> new Exception("Todo not found"));
+        User authUser = Utils.getAuthUser();
+        TodoList todoList =  this.todoListRepo.findByIdAndUserId(todoId, authUser.getId()).orElseThrow(() -> new Exception("Todo not found"));
         this.todoListRepo.delete(todoList);
     }
 

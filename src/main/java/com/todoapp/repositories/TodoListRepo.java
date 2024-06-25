@@ -11,5 +11,7 @@ import com.todoapp.entities.TodoList;
 
 @Repository
 public interface TodoListRepo extends JpaRepository<TodoList, Integer> {
+    List<TodoList> findByUserIdOrderByIdDesc(Integer userId);
+    Optional<TodoList> findByIdAndUserId(Integer todoId,Integer userId);
     Optional<TodoList> findByIdAndViewPasscodeAndIsPublicTrue(Integer todoId, String passcode);
 }

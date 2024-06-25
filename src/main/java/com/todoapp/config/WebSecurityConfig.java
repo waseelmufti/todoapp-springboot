@@ -22,7 +22,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.
         csrf((csrf) -> csrf.ignoringRequestMatchers("/h2-console/**"))
-        .headers((headers) -> headers.frameOptions().sameOrigin())
+        .headers((headers) -> headers
+                                .frameOptions(frameOptions -> frameOptions.sameOrigin()))
         .authorizeHttpRequests((requests) -> requests
                     .requestMatchers("/", "/js/**", "/css/**","/h2-console/**").permitAll()
                     .anyRequest().authenticated()
@@ -30,7 +31,8 @@ public class WebSecurityConfig {
                     .loginPage("/login")
                     .defaultSuccessUrl("/todo", true)
                     .permitAll()
-        ).logout((logout) -> logout.logoutSuccessUrl("/").permitAll());
+        ).rememberMe(rememberMe -> rememberMe.key("rememberMeSecretKey"))
+        .logout((logout) -> logout.logoutSuccessUrl("/").permitAll());
         return http.build();
     }
 
