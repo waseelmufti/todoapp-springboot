@@ -58,7 +58,6 @@ public class TodoItemController {
     public ResponseEntity<JsonResponse<?>> changeStatus(@PathVariable("todoId") Integer todoId, 
         @PathVariable("todoItemId") Integer todoItemId, @RequestParam("isChecked") String isChecked){
         
-        
         try{
             Boolean isCompleted = isChecked.equals("yes") ? true : false;
             this.todoItemService.changeStatus(todoId, todoItemId, isCompleted);

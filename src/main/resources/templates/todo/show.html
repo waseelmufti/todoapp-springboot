@@ -1,198 +1,208 @@
 <!DOCTYPE html>
-<html
-  th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{::#scripts})}"
-  xmlns:th="http://www.thymeleaf.org"
->
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo List</title>
-  </head>
-  <body>
-    <div id="content" class="p-2">
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <h1 class="title" th:text="${todo.title}">Title</h1>
-          </div>
-          <div class="level-item">
-            <span class="tag is-primary is-normal is-rounded" th:text="${todo.isPublic ? 'Public' : 'Private'}">Primary</span>
-          </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <a th:if="${todo.isPublic}" data-target="modal" class="js-modal-trigger button is-secondary mx-1"><i class="fas fa-share"></i>&nbsp;Share</a>
-            <a th:href="@{/todo/{todoId}/items/create(todoId=${todo.id})}" class="button is-primary mx-1">Add New Item</a>
-          </div>
-        </div>
-      </div>
-      <h6 class="subtitle is-5" th:text="${#temporals.format(todo.createdAt, 'MMM dd, yyyy')}">Subtitle</h6>
-      <hr class="bd-hr" />
-      <div class="container">
-        <p class="mb-5" th:text="${todo.description}"></p>
+<html th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{::#scripts})}"
+  xmlns:th="http://www.thymeleaf.org">
 
-        <nav class="panel">
-          <div id="notificationWrap"></div>
-            <p class="panel-heading"></p>
-            <div class="panel-block">
-              <p class="control has-icons-left">
-                <input class="input" type="text" placeholder="Enter 3 or more characters to Search" id="search" />
-                <span class="icon is-left">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-                </span>
-              </p>
-            </div>
-            <p class="panel-tabs">
-              <a th:class="${status.equals('all') ? 'is-active' : ''}" th:href="@{/todo/{todoId}(todoId=${todo.id})}">All</a>
-              <a th:class="${status.equals('completed') ? 'is-active' : ''}" th:href="@{/todo/{todoId}?status=completed(todoId=${todo.id})}">Completed</a>
-            </p>
-            <label class="panel-block list_item" th:each="todoItem : ${todoItems}"
-              th:id="'item-' + ${todoItem.id}">
-              <input type="checkbox" th:data-itemId="${todoItem.id}" th:checked="${todoItem.isCompleted}" />
-              <span th:text="${todoItem.title}">Task name</span>
-            </label>
-          </nav>
-      </div>
-      <!-- Modal -->
-      <div class="modal" id="modal">
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <button class="delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <div class="field has-addons">
-              <div class="control is-expanded">
-                <input class="input" type="text" placeholder="Share URL" id="copyUrlField" readonly="readonly" th:value="${APP_URL} + @{~/todo/{id}/share/{passCode}(id=${todo.id}, passCode=${todo.viewPasscode})}" />
-              </div>
-              <div class="control">
-                <button class="button is-info" id="copyUrlBtn">
-                  Copy URL
-                </button>
-              </div>
-            </div>
-          </section>
-          <footer class="modal-card-foot">
-            <div class="buttons">
-              <button class="button" aria-label="close">Close</button>
-            </div>
-          </footer>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo List</title>
+</head>
+
+<body>
+  <div id="content" class="p-2">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h1 class="title" th:text="${todo.title}">Title</h1>
+        </div>
+        <div class="level-item">
+          <span class="tag is-primary is-normal is-rounded"
+            th:text="${todo.isPublic ? 'Public' : 'Private'}">Primary</span>
         </div>
       </div>
-      <!-- End Modal -->
+      <div class="level-right">
+        <div class="level-item">
+          <a th:if="${todo.isPublic}" data-target="modal" class="js-modal-trigger button is-secondary mx-1"><i
+              class="fas fa-share"></i>&nbsp;Share</a>
+          <a th:if="${screentype.equals('private')}" th:href="@{/todo/{todoId}/items/create(todoId=${todo.id})}"
+            class="button is-primary mx-1">Add New Item</a>
+        </div>
+      </div>
     </div>
-    <div id="scripts">
-      <script th:inline="javascript">
-        var notificationHtml = '<div class="notification mb-2 {class}"><button class="delete"></button>{content}</div>';
-        $(document).ready(function(){
-          // Change todo item status
-          $(".list_item input[type='checkbox']").on("change",function(){
-            var itemId = $(this).data("itemid");
-            var url = /*[[@{/todo/{todoId}/items/{itemId}/change-status(todoId=${todo.id})}]]*/ "";
-            url =  url.replace("{itemId}", itemId);
-            var isChecked = $(this).is(":checked");
-            $.ajax({
-              // contentType: "application/json",
-              type: "POST",
-              url: url,
-              data: {"isChecked": isChecked ? "yes" : "no"},
-              beforeSend: function(xhr) {
-                $("#notificationWrap").html("");
-              },
-              success: function(response) {
-                if(response.status == "success"){
-                  var successNotification = notificationHtml.replace("{class}", "is-success").replace("{content}", "Item status changed successfully");
-                  $("#notificationWrap").html(successNotification);
-                }
-              },
-              error: function(error) {
-                var errorNotification = notificationHtml.replace("{class}", "is-danger").replace("{content}", error.errors.join("<br/>"));
-                $("#notificationWrap").html(errorNotification);
-              }
-            });
-          });
+    <h6 class="subtitle is-5" th:text="${#temporals.format(todo.createdAt, 'MMM dd, yyyy')}">Subtitle</h6>
+    <hr class="bd-hr" />
+    <div class="container">
+      <p class="mb-5" th:text="${todo.description}"></p>
 
-          // Search
-          $("#search").on("keyup", function(){
-            var searchText = $(this).val();
-            if(searchText.length){
-              $(".list_item").each(function(){
-                    var itemId = $(this).attr("id").replace("item-", "");
-                    var itemCheck = $(this).find("span").text().toLowerCase().includes(searchText.toLowerCase());
-                    if(itemCheck){
-                      $(this).show();
-                    } else {
-                      $(this).hide();
-                    }
-              });
-            }else{
-              $(".list_item").show();
+      <nav class="panel">
+        <div id="notificationWrap"></div>
+        <p class="panel-heading"></p>
+        <div class="panel-block">
+          <p class="control has-icons-left">
+            <input class="input" type="text" placeholder="Enter 3 or more characters to Search" id="search" />
+            <span class="icon is-left">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+          </p>
+        </div>
+        <p class="panel-tabs">
+          <a th:class="${status.equals('all') ? 'is-active' : ''}"
+            th:href="${screentype.equals('private') } ? @{/todo/{todoId}(todoId=${todo.id})} : @{/todo/{todoId}/share/{passcode}(todoId=${todo.id}, passcode=${todo.viewPasscode})}">All</a>
+          <a th:class="${status.equals('completed') ? 'is-active' : ''}"
+            th:href="${screentype.equals('private') } ? @{/todo/{todoId}?status=completed(todoId=${todo.id})} : @{/todo/{todoId}/share/{passcode}?status=completed(todoId=${todo.id}, passcode=${todo.viewPasscode})}">Completed</a>
+        </p>
+        <label class="panel-block list_item" th:each="todoItem : ${todoItems}" th:id="'item-' + ${todoItem.id}">
+          <input type="checkbox" th:data-itemId="${todoItem.id}" th:disabled="${screentype.equals('public')}"
+            th:checked="${todoItem.isCompleted}" />
+          <span th:text="${todoItem.title}">Task name</span>
+        </label>
+      </nav>
+    </div>
+    <!-- Modal -->
+    <div class="modal" id="modal">
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" type="text" placeholder="Share URL" id="copyUrlField" readonly="readonly"
+                th:value="${APP_URL} + @{~/todo/{id}/share/{passCode}(id=${todo.id}, passCode=${todo.viewPasscode})}" />
+            </div>
+            <div class="control">
+              <button class="button is-info" id="copyUrlBtn">
+                Copy URL
+              </button>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button class="button" aria-label="close">Close</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <!-- End Modal -->
+  </div>
+  <div id="scripts">
+    <script th:inline="javascript">
+      var notificationHtml = '<div class="notification mb-2 {class}"><button class="delete"></button>{content}</div>';
+      $(document).ready(function () {
+        // Change todo item status
+        $(".list_item input[type='checkbox']").on("change", function () {
+          var itemId = $(this).data("itemid");
+          var url = /*[[@{/todo/{todoId}/items/{itemId}/change-status(todoId=${todo.id})}]]*/ "";
+          url = url.replace("{itemId}", itemId);
+          var isChecked = $(this).is(":checked");
+          $.ajax({
+            // contentType: "application/json",
+            type: "POST",
+            url: url,
+            data: { "isChecked": isChecked ? "yes" : "no" },
+            beforeSend: function (xhr) {
+              $("#notificationWrap").html("");
+              var token = $("meta[name='_csrf']").attr("content");
+              var header = $("meta[name='_csrf_header']").attr("content");
+              xhr.setRequestHeader(header, token);
+            },
+            success: function (response) {
+              if (response.status == "success") {
+                var successNotification = notificationHtml.replace("{class}", "is-success").replace("{content}", "Item status changed successfully");
+                $("#notificationWrap").html(successNotification);
+              }
+            },
+            error: function (error) {
+              var errorNotification = notificationHtml.replace("{class}", "is-danger").replace("{content}", error.errors.join("<br/>"));
+              $("#notificationWrap").html(errorNotification);
             }
           });
-
-          $("#copyUrlBtn").on("click", function(){
-            var copyUrlField = $("#copyUrlField");
-            var copyBtn = $(this);
-            var btnTxt = copyBtn.text();
-
-            copyUrlField.focus();
-            copyUrlField.select();
-            var url = copyUrlField.val();
-            navigator.clipboard.writeText(url);
-            copyBtn.text("Text Coppied!!");
-            
-            setTimeout(function(){
-              copyUrlField.blur();
-              copyBtn.text(btnTxt);
-            }, 1000);
-          });
-
         });
-      </script>
-      <!-- Modal Script -->
-       <script>
-        document.addEventListener('DOMContentLoaded', () => {
-  // Functions to open and close a modal
-  function openModal($el) {
-    $el.classList.add('is-active');
-  }
 
-  function closeModal($el) {
-    $el.classList.remove('is-active');
-  }
+        // Search
+        $("#search").on("keyup", function () {
+          var searchText = $(this).val();
+          if (searchText.length >= 3) {
+            $(".list_item").each(function () {
+              var itemId = $(this).attr("id").replace("item-", "");
+              var itemCheck = $(this).find("span").text().toLowerCase().includes(searchText.toLowerCase());
+              if (itemCheck) {
+                $(this).show();
+              } else {
+                $(this).hide();
+              }
+            });
+          } else {
+            $(".list_item").show();
+          }
+        });
 
-  function closeAllModals() {
-    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
-      closeModal($modal);
-    });
-  }
+        $("#copyUrlBtn").on("click", function () {
+          var copyUrlField = $("#copyUrlField");
+          var copyBtn = $(this);
+          var btnTxt = copyBtn.text();
 
-  // Add a click event on buttons to open a specific modal
-  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
-    const modal = $trigger.dataset.target;
-    const $target = document.getElementById(modal);
+          copyUrlField.focus();
+          copyUrlField.select();
+          var url = copyUrlField.val();
+          navigator.clipboard.writeText(url);
+          copyBtn.text("Text Coppied!!");
 
-    $trigger.addEventListener('click', () => {
-      openModal($target);
-    });
-  });
+          setTimeout(function () {
+            copyUrlField.blur();
+            copyBtn.text(btnTxt);
+          }, 1000);
+        });
 
-  // Add a click event on various child elements to close the parent modal
-  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
-    const $target = $close.closest('.modal');
+      });
+    </script>
+    <!-- Modal Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Functions to open and close a modal
+        function openModal($el) {
+          $el.classList.add('is-active');
+        }
 
-    $close.addEventListener('click', () => {
-      closeModal($target);
-    });
-  });
+        function closeModal($el) {
+          $el.classList.remove('is-active');
+        }
 
-  // Add a keyboard event to close all modals
-  document.addEventListener('keydown', (event) => {
-    if(event.key === "Escape") {
-      closeAllModals();
-    }
-  });
-});
-       </script>
-    </div>
-  </body>
+        function closeAllModals() {
+          (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+            closeModal($modal);
+          });
+        }
+
+        // Add a click event on buttons to open a specific modal
+        (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+          const modal = $trigger.dataset.target;
+          const $target = document.getElementById(modal);
+
+          $trigger.addEventListener('click', () => {
+            openModal($target);
+          });
+        });
+
+        // Add a click event on various child elements to close the parent modal
+        (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+          const $target = $close.closest('.modal');
+
+          $close.addEventListener('click', () => {
+            closeModal($target);
+          });
+        });
+
+        // Add a keyboard event to close all modals
+        document.addEventListener('keydown', (event) => {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      });
+    </script>
+  </div>
+</body>
+
 </html>

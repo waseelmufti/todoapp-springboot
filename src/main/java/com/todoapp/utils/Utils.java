@@ -37,7 +37,7 @@ public class Utils {
     public static User getAuthUser(){
         // Get the authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (User) authentication.getPrincipal();
+        return authentication.getPrincipal() != null ? (User) authentication.getPrincipal() : null;
     }
 
     public static String getAuthUserName(){

@@ -51,12 +51,33 @@ public class TodoItemServiceImpl implements TodoItemService{
         }).collect(Collectors.toList());
         return todoItemDTOs;
     }
+    @Override
+    public List<TodoItemDTO> getAllTodoItem(Integer todoId, String passcode) throws Exception{
+        TodoList todoList = this.todoRepo.findByIdAndViewPasscodeAndIsPublicTrue(todoId, passcode).orElseThrow(() -> new Exception("Todo not found"));
+
+        List<TodoItem> todoItems = this.todoItemRepo.findByTodoList_Id(todoList.getId());
+        List<TodoItemDTO> todoItemDTOs = todoItems.stream().map((item) -> {
+            return new TodoItemDTO(item.getId(), item.getTitle(), item.getDescription(), item.isCompleted() ? "yes" : "no", item.getCreatedAt(), item.getUpdatedAt());
+        }).collect(Collectors.toList());
+        return todoItemDTOs;
+    }
         
         
     @Override
     public List<TodoItemDTO> getAllCompletedTodoItem(Integer todoId) throws Exception {
         User authUser = Utils.getAuthUser();
         TodoList todoList = this.todoRepo.findByIdAndUserId(todoId, authUser.getId()).orElseThrow(() -> new Exception("Todo not found"));
+
+        List<TodoItem> todoItems = this.todoItemRepo.findByTodoList_IdAndIsCompletedTrue(todoList.getId());
+        List<TodoItemDTO> todoItemDTOs = todoItems.stream().map((item) -> {
+            return new TodoItemDTO(item.getId(), item.getTitle(), item.getDescription(), item.isCompleted() ? "yes" : "no", item.getCreatedAt(), item.getUpdatedAt());
+        }).collect(Collectors.toList());
+        return todoItemDTOs;
+    }
+    
+    @Override
+    public List<TodoItemDTO> getAllCompletedTodoItem(Integer todoId, String passcode) throws Exception {
+        TodoList todoList = this.todoRepo.findByIdAndViewPasscodeAndIsPublicTrue(todoId, passcode).orElseThrow(() -> new Exception("Todo not found"));
 
         List<TodoItem> todoItems = this.todoItemRepo.findByTodoList_IdAndIsCompletedTrue(todoList.getId());
         List<TodoItemDTO> todoItemDTOs = todoItems.stream().map((item) -> {

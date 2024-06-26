@@ -25,9 +25,11 @@ public class WebSecurityConfig {
         .headers((headers) -> headers
                                 .frameOptions(frameOptions -> frameOptions.sameOrigin()))
         .authorizeHttpRequests((requests) -> requests
-                    .requestMatchers("/", "/js/**", "/css/**","/h2-console/**").permitAll()
+                    .requestMatchers("/", "/js/**", "/css/**","/h2-console/**", "/error").permitAll()
+                    .requestMatchers("/todo/{id}/share/{passcode}").permitAll()
                     .anyRequest().authenticated()
-        ).formLogin((form) -> form
+        )
+        .formLogin((form) -> form
                     .loginPage("/login")
                     .defaultSuccessUrl("/todo", true)
                     .permitAll()

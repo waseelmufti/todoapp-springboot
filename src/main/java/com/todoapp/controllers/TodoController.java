@@ -124,6 +124,7 @@ public class TodoController {
             model.addAttribute("APP_URL", APP_URL);
             model.addAttribute("todoItems", todoItemsDTO);
             model.addAttribute("status", status);
+            model.addAttribute("screentype", "private");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", e.getMessage()));
             return "redirect:/todo";
@@ -131,24 +132,26 @@ public class TodoController {
         return "todo/show";
     }
     @RequestMapping("/{id}/share/{passcode}")
-    public String shareView(@PathVariable("id") Integer id, @PathVariable("passcode") String passcode,Model model, 
+    public String shareView(@PathVariable("id") Integer id, @PathVariable("passcode") String passcode, 
+        Model model, 
         RedirectAttributes redirectAttributes, HttpServletRequest request,
-        @RequestParam(value = "status", required = false) String status) {
+        @RequestParam(value = "status", required = false, defaultValue = "all") String status) {
         try {
             model.addAttribute("todo", this.todoService.getTodoByIdAndPasscode(id, passcode));
             List<TodoItemDTO> todoItemsDTO = null;
             if(status != null && status.equals("completed")){
-                todoItemsDTO = this.todoItemService.getAllCompletedTodoItem(id);
+                todoItemsDTO = this.todoItemService.getAllCompletedTodoItem(id, passcode);
             }else{
                 status = "all";
-                todoItemsDTO = this.todoItemService.getAllTodoItem(id);
+                todoItemsDTO = this.todoItemService.getAllTodoItem(id, passcode);
             }
             model.addAttribute("APP_URL", APP_URL);
             model.addAttribute("todoItems", todoItemsDTO);
             model.addAttribute("status", status);
+            model.addAttribute("screentype", "public");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("alertMessage", new AlertMessage("danger", e.getMessage()));
-            return "redirect:/todo";
+            return "redirect:/error";
         }
         return "todo/show";
     }
