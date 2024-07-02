@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html
-  th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{})}"
-  xmlns:th="http://www.thymeleaf.org"
->
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Page</title>
-  </head>
-  <body>
-    <div id="content" class="p-2">
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <h1 class="title">Home Page</h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+<html th:replace="~{layouts/layout :: layout(~{::title}, ~{::#content}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Page</title>
+</head>
+
+<body>
+  <div id="content" class="content is-normal p-2">
+    <h1 class="title">My Todo Application</h1>
+    <p>This is a simple application to help you manage your daily tasks. Create, organize, and track your to-do list
+      with ease!</p>
+    <p>The learning purpose of this project is to learn Spring Boot and Spring Security, and what is the workflow of creating a spring boot application, how to intract with database and how to fetch and represent data in a template.</p>
+
+    <h2>Features</h2>
+    <ul>
+      <li>You can create multiple todo lists</li>
+      <li>Search todo item</li>
+      <li>Share your todo lists with friends</li>
+      <li>Secured with Spring Security</li>
+    </ul>
+
+    <h2>Technologies Used</h2>
+    <ul>
+      <li>Spring Boot</li>
+      <li>Spring Security</li>
+      <li>Thymeleaf</li>
+      <li>Bulma CSS</li>
+      <li>Javascript and Jquery</li>
+      <li>H2 Database</li>
+    </ul>
+  </div>
+</body>
+
 </html>

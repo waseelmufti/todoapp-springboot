@@ -13,12 +13,12 @@
     <th:block th:replace="${sytles}" />
 </head>
 <body>
-    <nav th:replace="layouts/partials/navbar :: navbar"></nav>
+    <nav th:replace="~{layouts/partials/navbar :: navbar}"></nav>
     <div class="container p-2">
-        <div th:replace="layouts/partials/messages :: notification"></div>
+        <div th:replace="~{layouts/partials/messages :: notification}"></div>
         <div th:replace="${content}"></div>
     </div>
-    <footer th:replace="layouts/partials/footer :: footer"></footer>
+    <footer th:replace="~{layouts/partials/footer :: footer}"></footer>
     <script th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/js/custom.js}"></script>
     <th:block th:replace="${scripts}" />
